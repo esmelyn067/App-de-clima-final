@@ -6,6 +6,10 @@ import './App.css'
 const API_KEY = '3a140248970a01e6fa79ee2a4e6d0bcd'; 
 const UNSPLASH_ACCESS_KEY = '2Pklo33OVyOYqBJgAMtFijR2hYhVE1tET1Vjj-LNyUw'; 
 const UNSPLASH_BASE_URL = 'https://api.unsplash.com';
+//Agregado por Esmelyn
+const temp = Math.round(weather.main.temp);
+const convertedTemp = unit === 'metric' ? temp : Math.round((temp * 9/5) + 32);
+
 
 function Weather() {
   const [query, setQuery] = useState('');
@@ -102,7 +106,7 @@ function Weather() {
            </div>
             
           </div>
-            <div className="temperature">{Math.round(weather.main.temp)}°{unit === 'metric' ? 'C' : 'F'}</div>
+            <div className="temperature">{convertedTemp}°{unit === 'metric' ? 'F' : 'C'}</div> //Modificado
             <div className="weather">{weather.weather[0].main}</div>
             <div className="details">
               <div className="humidity">
