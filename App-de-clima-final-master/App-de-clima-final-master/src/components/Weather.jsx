@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import UnitSelector from './UnitSelector';
 import './App.css'
 
+
 const API_KEY = '3a140248970a01e6fa79ee2a4e6d0bcd'; 
 const UNSPLASH_ACCESS_KEY = '2Pklo33OVyOYqBJgAMtFijR2hYhVE1tET1Vjj-LNyUw'; 
 const UNSPLASH_BASE_URL = 'https://api.unsplash.com';
@@ -15,6 +16,7 @@ function Weather() {
   const [iconURL, setIconURL] = useState('');
   const [humidityIcon, setHumidityIcon] = useState('');
   const [windIcon, setWindIcon] = useState('');
+  const [conv, setConv] = useState();
 
   const search = async (e) => {
     if (e.key === 'Enter') {
@@ -26,8 +28,16 @@ function Weather() {
       fetchWeatherIcon(data.weather[0].icon);
       fetchHumidityIcon();
       fetchWindIcon();
+      fetchTemp(data.main.temp);
+      
+
+     console.log(Math.round(data.main.temp))
     }
   };
+
+  
+
+
 
   const fetchCityImage = async (city) => {
     try {
@@ -47,6 +57,8 @@ function Weather() {
     const iconBaseUrl = 'http://openweathermap.org/img/wn/';
     setIconURL(`${iconBaseUrl}${iconName}@2x.png`);
   };
+  
+  
 
   const fetchHumidityIcon = () => {
     setHumidityIcon('../../public/icons/humidity.png');
@@ -62,7 +74,7 @@ function Weather() {
       navigator.geolocation.getCurrentPosition((position) => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
-        fetchWeatherData(`${latitude},${longitude}`);
+        (`${latitude},${longitude}`);
       }, (error) => {
         console.error('Error getting geolocation:', error);
       });
@@ -73,11 +85,19 @@ function Weather() {
   useEffect(() => {
     getLocation();
   }, [unit]);
-
+  const fetchTemp = () =>{
+  setConv()
+}
+  
+  
   const handleChangeUnit = (e) => {
     setUnit(e.target.value);
   };
+   
+  
 
+
+   
   return (
     <div>
       <div className="search-box">
@@ -102,7 +122,8 @@ function Weather() {
            </div>
             
           </div>
-            <div className="temperature">{Math.round(weather.main.temp)}°{unit === 'metric' ? 'C' : 'F'}</div>
+            <div className="temperature">{unit === 'metric' ? Math.round(weather.main.temp)  : Math.round(weather.main.temp  * 9/5  + 32)}°
+            {unit === 'metric' ?  'C' : 'F'}</div>
             <div className="weather">{weather.weather[0].main}</div>
             <div className="details">
               <div className="humidity">
