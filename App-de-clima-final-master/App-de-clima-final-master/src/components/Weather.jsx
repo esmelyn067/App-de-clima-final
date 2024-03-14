@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import UnitSelector from './UnitSelector';
-import './App.css'
-
+import './App.css';
+import Forecast from './Forecast';
 
 const API_KEY = '3a140248970a01e6fa79ee2a4e6d0bcd'; 
 const UNSPLASH_ACCESS_KEY = '2Pklo33OVyOYqBJgAMtFijR2hYhVE1tET1Vjj-LNyUw'; 
@@ -16,7 +15,9 @@ function Weather() {
   const [iconURL, setIconURL] = useState('');
   const [humidityIcon, setHumidityIcon] = useState('');
   const [windIcon, setWindIcon] = useState('');
-  const [conv, setConv] = useState();
+  const [forecast, setForecast] = useState([]);
+  const [selectedDate, setSelectedDate] = useState('');
+  const [currentTime, setCurrentTime] = useState('');
 
   const search = async (e) => {
     if (e.key === 'Enter') {
@@ -28,16 +29,9 @@ function Weather() {
       fetchWeatherIcon(data.weather[0].icon);
       fetchHumidityIcon();
       fetchWindIcon();
-      fetchTemp(data.main.temp);
-      
-
-     console.log(Math.round(data.main.temp))
+      fetchForecast(data.coord.lat, data.coord.lon);
     }
   };
-
-  
-
-
 
   const fetchCityImage = async (city) => {
     try {
@@ -58,18 +52,15 @@ function Weather() {
     setIconURL(`${iconBaseUrl}${iconName}@2x.png`);
   };
   
-  
-
   const fetchHumidityIcon = () => {
     setHumidityIcon('../../public/icons/humidity.png');
   };
 
   const fetchWindIcon = () => {
-    
     setWindIcon('../../public/icons/Wind.png');
   };
 
- const getLocation = async () => {
+  const getLocation = async () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const latitude = position.coords.latitude;
@@ -82,21 +73,25 @@ function Weather() {
       console.error('Geolocation is not supported by this browser.');
     }
   };
+
+  const fetchForecast = async (lat, lon) => {
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${unit}&appid=${API_KEY}`);
+    const data = await response.json();
+    setForecast(data.list);
+  };
+
   useEffect(() => {
     getLocation();
+    setCurrentTime(new Date().toLocaleTimeString());
   }, [unit]);
-  const fetchTemp = () =>{
-  setConv()
-}
-  
-  
+
   const handleChangeUnit = (e) => {
     setUnit(e.target.value);
   };
-   
-  
 
-
+  const handleDaySelect = (date) => {
+    setSelectedDate(date);
+  };
    
   return (
     <div>
@@ -109,37 +104,39 @@ function Weather() {
           onChange={(e) => setQuery(e.target.value)}
           onKeyPress={search}
         />
-       <UnitSelector unit={unit} handleChangeUnit={handleChangeUnit} />
+        <UnitSelector unit={unit} handleChangeUnit={handleChangeUnit} />
       </div>
       {(typeof weather.main != 'undefined') ? (
-          <div className="weather-box">
-           <div>
+        <div className="weather-box">
           <div className="location-box">
             <div className="location">{weather.name}, {weather.sys.country}</div>
             <div className="date">{new Date().toLocaleDateString()}</div>
+            <div className="time">{currentTime}</div>
             <div className='image'>
-            {imageURL && <img src={imageURL} alt="City" className="city-image" />}
-           </div>
-            
-          </div>
-            <div className="temperature">{unit === 'metric' ? Math.round(weather.main.temp)  : Math.round(weather.main.temp  * 9/5  + 32)}°
-            {unit === 'metric' ?  'C' : 'F'}</div>
-            <div className="weather">{weather.weather[0].main}</div>
-            <div className="details">
-              <div className="humidity">
-                <img src={humidityIcon} alt="Humidity Icon" className="icon" />
-                <p>Humedad: {weather.main.humidity}%</p>
-              </div>
-              <div className="wind-speed">
-                <img src={windIcon} alt="Wind Icon" className="icon" />
-                <p>Viento: {weather.wind.speed} {unit === 'metric' ? 'm/s' : 'mph'}</p>
-              </div>
+              {imageURL && <img src={imageURL} alt="City" className="city-image" />}
             </div>
-            {iconURL && <img src={iconURL} alt="Weather Icon" className="weather-icon" />}
           </div>
+          <div className="temperature">
+            {unit === 'metric' ? Math.round(weather.main.temp) : Math.round(weather.main.temp * 9 / 5 + 32)}°
+            {unit === 'metric' ? 'C' : 'F'}
+          </div>
+          <div className="weather">{weather.weather[0].main}</div>
+          <div className="details">
+            <div className="humidity">
+              <img src={humidityIcon} alt="Humidity Icon" className="icon" />
+              <p>Humedad: {weather.main.humidity}%</p>
+            </div>
+            <div className="wind-speed">
+              <img src={windIcon} alt="Wind Icon" className="icon" />
+              <p>Viento: {weather.wind.speed} {unit === 'metric' ? 'm/s' : 'mph'}</p>
+            </div>
+          </div>
+          {iconURL && <img src={iconURL} alt="Weather Icon" className="weather-icon" />}
         </div>
       ) : ('')}
-      
+      {forecast.length > 0 && (
+        <Forecast forecast={forecast} />
+      )}
     </div>
   );
 }

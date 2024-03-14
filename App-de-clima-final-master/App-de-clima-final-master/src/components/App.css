@@ -26,7 +26,7 @@ body {
   font-size: 16px;
 }
 
-.weather-box {
+.weather-box, .forecast {
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 10px;
   padding: 10px;
