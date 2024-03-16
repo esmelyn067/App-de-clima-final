@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 
-function Forecast({ forecast, unit }) {
+function Forecast({ forecast, unit, windIcon, humidityIcon }) {
   return (
     <div className="forecast-container">
       <h2 className="forecast-heading">Forecast</h2>
@@ -17,11 +17,11 @@ function Forecast({ forecast, unit }) {
             <div className="weather">{item.weather[0].main}</div>
             <div className="details">
               <div className="humidity">
-                <img src="/humidity-icon.png" alt="Humidity Icon" className="icon" />
+                <img src={humidityIcon} alt="Humidity Icon" className="icon" />
                 <p>{item.main.humidity}%</p>
               </div>
               <div className="wind-speed">
-                <img src="/wind-icon.png" alt="Wind Icon" className="icon" />
+                <img src={windIcon} alt="Wind Icon" className="icon" />
                 <p>{item.wind.speed} {unit === 'metric' ? 'm/s' : 'mph'}</p>
               </div>
             </div>

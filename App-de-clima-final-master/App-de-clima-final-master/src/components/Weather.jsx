@@ -3,8 +3,8 @@ import UnitSelector from './UnitSelector';
 import './App.css';
 import Forecast from './Forecast';
 
-const API_KEY = '3a140248970a01e6fa79ee2a4e6d0bcd';
-const UNSPLASH_ACCESS_KEY = '2Pklo33OVyOYqBJgAMtFijR2hYhVE1tET1Vjj-LNyUw';
+const API_KEY = '3a140248970a01e6fa79ee2a4e6d0bcd'; 
+const UNSPLASH_ACCESS_KEY = '2Pklo33OVyOYqBJgAMtFijR2hYhVE1tET1Vjj-LNyUw'; 
 const UNSPLASH_BASE_URL = 'https://api.unsplash.com';
 
 function Weather() {
@@ -12,9 +12,15 @@ function Weather() {
   const [weather, setWeather] = useState({});
   const [unit, setUnit] = useState('metric');
   const [imageURL, setImageURL] = useState('');
+  const [iconURL, setIconURL] = useState('');
+  const [humidityIcon, setHumidityIcon] = useState('');
+  const [windIcon, setWindIcon] = useState('');
   const [forecast, setForecast] = useState([]);
   const [selectedDate, setSelectedDate] = useState('');
   const [currentTime, setCurrentTime] = useState('');
+
+  const temp = Math.round(weather.main?.temp);
+  const convertedTemp = unit === 'metric' ? temp : Math.round((temp * 9/5) + 32);
 
   const search = async (e) => {
     if (e.key === 'Enter') {
@@ -23,6 +29,9 @@ function Weather() {
       setWeather(data);
       setQuery('');
       fetchCityImage(data.name);
+      fetchWeatherIcon(data.weather[0].icon);
+      fetchHumidityIcon();
+      fetchWindIcon();
       fetchForecast(data.coord.lat, data.coord.lon);
     }
   };
@@ -34,11 +43,24 @@ function Weather() {
       if (data.results.length > 0) {
         setImageURL(data.results[0].urls.regular);
       } else {
-        setImageURL('');
+        setImageURL(''); 
       }
     } catch (error) {
       console.error('Error fetching image:', error);
     }
+  };
+
+  const fetchWeatherIcon = async (iconName) => {
+    const iconBaseUrl = 'http://openweathermap.org/img/wn/';
+    setIconURL(`${iconBaseUrl}${iconName}@2x.png`);
+  };
+  
+  const fetchHumidityIcon = () => {
+    setHumidityIcon('../../public/icons/humidity.png');
+  };
+
+  const fetchWindIcon = () => {
+    setWindIcon('../../public/icons/Wind.png');
   };
 
   const getLocation = async () => {
@@ -73,7 +95,7 @@ function Weather() {
   const handleDaySelect = (date) => {
     setSelectedDate(date);
   };
-
+   
   return (
     <div>
       <div className="search-box">
@@ -87,7 +109,7 @@ function Weather() {
         />
         <UnitSelector unit={unit} handleChangeUnit={handleChangeUnit} />
       </div>
-      {weather.main && (
+      {(typeof weather.main !== 'undefined') ? (
         <div className="weather-box">
           <div className="location-box">
             <div className="location">{weather.name}, {weather.sys.country}</div>
@@ -98,21 +120,24 @@ function Weather() {
             </div>
           </div>
           <div className="temperature">
-            {unit === 'metric' ? Math.round(weather.main.temp) : Math.round(weather.main.temp * 9 / 5 + 32)}°{unit === 'metric' ? 'C' : 'F'}
+            {convertedTemp}°{unit === 'metric' ? 'C' : 'F'}
           </div>
           <div className="weather">{weather.weather[0].main}</div>
           <div className="details">
             <div className="humidity">
+              <img src={humidityIcon} alt="Humidity Icon" className="icon" />
               <p>Humedad: {weather.main.humidity}%</p>
             </div>
             <div className="wind-speed">
+              <img src={windIcon} alt="Wind Icon" className="icon" />
               <p>Viento: {weather.wind.speed} {unit === 'metric' ? 'm/s' : 'mph'}</p>
             </div>
           </div>
+          {iconURL && <img src={iconURL} alt="Weather Icon" className="weather-icon" />}
         </div>
-      )}
+      ) : ('')}
       {forecast.length > 0 && (
-        <Forecast forecast={forecast} />
+        <Forecast forecast={forecast} windIcon={windIcon} humidityIcon={humidityIcon} />
       )}
     </div>
   );
