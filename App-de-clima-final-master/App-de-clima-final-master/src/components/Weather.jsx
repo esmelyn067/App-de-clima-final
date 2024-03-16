@@ -6,6 +6,10 @@ import Forecast from './Forecast';
 const API_KEY = '3a140248970a01e6fa79ee2a4e6d0bcd'; 
 const UNSPLASH_ACCESS_KEY = '2Pklo33OVyOYqBJgAMtFijR2hYhVE1tET1Vjj-LNyUw'; 
 const UNSPLASH_BASE_URL = 'https://api.unsplash.com';
+//Agregado por Esmelyn
+const temp = Math.round(weather.main.temp);
+const convertedTemp = unit === 'metric' ? temp : Math.round((temp * 9/5) + 32);
+
 
 function Weather() {
   const [query, setQuery] = useState('');
@@ -113,7 +117,25 @@ function Weather() {
             <div className="date">{new Date().toLocaleDateString()}</div>
             <div className="time">{currentTime}</div>
             <div className='image'>
+<<<<<<< HEAD
               {imageURL && <img src={imageURL} alt="City" className="city-image" />}
+=======
+            {imageURL && <img src={imageURL} alt="City" className="city-image" />}
+           </div>
+            
+          </div>
+            <div className="temperature">{convertedTemp}°{unit === 'metric' ? 'F' : 'C'}</div> //Modificado
+            <div className="weather">{weather.weather[0].main}</div>
+            <div className="details">
+              <div className="humidity">
+                <img src={humidityIcon} alt="Humidity Icon" className="icon" />
+                <p>Humedad: {weather.main.humidity}%</p>
+              </div>
+              <div className="wind-speed">
+                <img src={windIcon} alt="Wind Icon" className="icon" />
+                <p>Viento: {weather.wind.speed} {unit === 'metric' ? 'm/s' : 'mph'}</p>
+              </div>
+>>>>>>> 0f7bebe867577e392ed2cdb09afcb9e13193ed33
             </div>
           </div>
           <div className="temperature">
