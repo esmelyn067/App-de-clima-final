@@ -16,7 +16,6 @@ function Weather() {
   const [humidityIcon, setHumidityIcon] = useState('');
   const [windIcon, setWindIcon] = useState('');
   const [forecast, setForecast] = useState([]);
-  const [selectedDate, setSelectedDate] = useState('');
   const [currentTime, setCurrentTime] = useState('');
 
   const temp = Math.round(weather.main?.temp);
@@ -92,10 +91,7 @@ function Weather() {
     setUnit(e.target.value);
   };
 
-  const handleDaySelect = (date) => {
-    setSelectedDate(date);
-  };
-   
+ 
   return (
     <div>
       <div className="search-box">
