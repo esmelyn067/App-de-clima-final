@@ -109,6 +109,7 @@ function Weather() {
         />
         <UnitSelector unit={unit} handleChangeUnit={handleChangeUnit} />
       </div>
+      <div className='App'>
       {(typeof weather.main !== 'undefined') ? (
         <div className="weather-box">
           <div className="location-box">
@@ -136,11 +137,16 @@ function Weather() {
           {iconURL && <img src={iconURL} alt="Weather Icon" className="weather-icon" />}
         </div>
       ) : ('')}
-      {forecast.length > 0 && (
-        <Forecast forecast={forecast} windIcon={windIcon} humidityIcon={humidityIcon} />
+      <div>
+        {forecast.length > 0 && (
+        <Forecast forecast={forecast} windIcon={windIcon} humidityIcon={humidityIcon} unit={unit}/>
       )}
+     </div>
+    </div>
+     
     </div>
   );
+
 }
 
 export default Weather;

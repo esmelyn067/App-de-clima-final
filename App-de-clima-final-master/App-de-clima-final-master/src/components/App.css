@@ -2,16 +2,20 @@ body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-  background-image: url('../assets/Fondo.jpg'); 
-  background-size: cover; 
-  background-repeat: no-repeat; 
-  justify-content: center;
+  background-image: url('../assets/Fondo.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .app {
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: auto;
+  margin: 10px;
+  padding: 10px;
 }
 
 .search-box {
@@ -19,29 +23,48 @@ body {
 }
 
 .search-bar {
-  width: auto;
+  width: 50%;
   padding: 10px;
   border: none;
   border-radius: 5px;
   font-size: 16px;
 }
-
-.weather-box, .forecast {
-  background-color: rgba(255, 255, 255, 0.7);
+.App {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+  }
+.weather-box,
+.forecast-container {
+  background-color: rgba(18, 10, 185, 0.358);
   border-radius: 10px;
+  color: bisque;
   padding: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  box-shadow: 0px 0px 10px rgba(203, 193, 215, 0.937);
   text-align: center;
-  width: auto;
-  margin: 0;
+  width: 100%;
+  max-width: 400px; 
+
+  
 }
-p{
-margin: 0;
+.weather-box{
+height: 600px;
+
+}
+.forecast-container{
+height: 600px;
+padding: auto;
+
+}
+
+
+.forecast-container h2 {
+  color: rgba(16, 16, 114, 0.504);
+  font-size: 2em;
 }
 
 .location-box {
   margin-bottom: 20px;
-  margin: 0;
 }
 
 .location {
@@ -82,20 +105,31 @@ margin: 0;
 .unit-selector label {
   margin-right: 10px;
 }
-.image{
- width: auto;
 
-}
 .city-image {
-  width: 400px;
-  max-width: 400px;
-  height: 200px;
+  width: 100%;
+  max-width: 400px; 
+  height: auto; 
   border-radius: 10px;
   margin-top: 10px;
 }
 
 @media (max-width: 600px) {
+  .search-bar,
+  .city-image {
+    width: 100%;
+  }
+}
+
+@media (min-width: 744px) {
   .search-bar {
     width: 100%;
+  }
+  .forecast-container,
+  .app {
+    width: 100%;
+  }
+  .city-image {
+    width: 50%;
   }
 }
